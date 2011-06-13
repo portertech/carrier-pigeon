@@ -6,11 +6,13 @@ Gem::Specification.new do |s|
   s.name        = "carrier-pigeon"
   s.version     = Carrier::Pigeon::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["TODO: Write your name"]
-  s.email       = ["TODO: Write your email address"]
-  s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.authors     = ["Sean Porter"]
+  s.email       = ["portertech@gmail.com"]
+  s.homepage    = "https://github.com/portertech/carrier-pigeon"
+  s.summary     = %q{The simplest library to say something on IRC}
+  s.description = %q{The simplest library to say something on IRC}
+  s.has_rdoc    = false
+  s.license     = "MIT"
 
   s.rubyforge_project = "carrier-pigeon"
 
