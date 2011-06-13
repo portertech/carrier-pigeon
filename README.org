@@ -1,0 +1,8 @@
+* Usage
+: require 'carrier-pigeon'
+: 
+: # In the open
+: CarrierPigeon.send({:uri => "irc://nick:password@irc.domain.us:6667/#channel", :message => "cooooo, coo coo"})
+: 
+: # SSL
+: CarrierPigeon.send({:uri => "irc://nick:password@irc.domain.us:6667/#channel", :message => "cooooo, secret plan", :ssl => true})
