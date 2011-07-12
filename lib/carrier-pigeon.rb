@@ -11,6 +11,7 @@ class CarrierPigeon
       ssl_context.verify_mode = OpenSSL::SSL::VERIFY_NONE
       @socket = OpenSSL::SSL::SSLSocket.new(tcp_socket, ssl_context)
       @socket.sync = true
+      @socket.sync_close = true
       @socket.connect
     else
       @socket = tcp_socket
@@ -41,7 +42,7 @@ class CarrierPigeon
 
   def sendln(cmd)
     @socket.write("#{cmd}\r\n")
-    STDOUT.flush
+    @socket.flush
   end
 
 end
