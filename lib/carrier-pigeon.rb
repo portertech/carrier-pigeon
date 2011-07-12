@@ -32,9 +32,9 @@ class CarrierPigeon
     raise ArgumentError unless options[:uri] && options[:message]
     uri = Addressable::URI.parse(options[:uri])
     ssl = options[:ssl] || false
-    pidgeon = new(uri.host, uri.port, uri.user, uri.password, ssl)
-    pidgeon.message("#" + uri.fragment, options[:message])
-    pidgeon.die
+    pigeon = new(uri.host, uri.port, uri.user, uri.password, ssl)
+    pigeon.message("#" + uri.fragment, options[:message])
+    pigeon.die
   end
 
   private
