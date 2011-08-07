@@ -1,7 +1,3 @@
-# -*- encoding: utf-8 -*-
-$:.push File.expand_path("../lib", __FILE__)
-require "carrier-pigeon/version"
-
 Gem::Specification.new do |s|
   s.name        = "carrier-pigeon"
   s.version     = "0.1.0"
