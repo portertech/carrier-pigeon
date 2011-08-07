@@ -4,7 +4,7 @@ require "carrier-pigeon/version"
 
 Gem::Specification.new do |s|
   s.name        = "carrier-pigeon"
-  s.version     = Carrier::Pigeon::VERSION
+  s.version     = "0.1.0"
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Sean Porter"]
   s.email       = ["portertech@gmail.com"]
