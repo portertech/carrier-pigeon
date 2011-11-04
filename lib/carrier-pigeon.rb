@@ -4,9 +4,12 @@ require "openssl"
 
 class CarrierPigeon
 
-  def initialize(server, port, nick, password, ssl)
-    tcp_socket = TCPSocket.new(server, port || 6667)
-    if ssl
+  def initialize(options={})
+    [:host, :port, :nick, :channel].each do |option|
+      raise "You must provide an IRC #{option}" unless options.has_key?(option)
+    end
+    tcp_socket = TCPSocket.new(options[:host], options[:port])
+    if options[:ssl]
       ssl_context = OpenSSL::SSL::SSLContext.new
       ssl_context.verify_mode = OpenSSL::SSL::VERIFY_NONE
       @socket = OpenSSL::SSL::SSLSocket.new(tcp_socket, ssl_context)
@@ -16,9 +19,10 @@ class CarrierPigeon
     else
       @socket = tcp_socket
     end
-    sendln "PASS #{password}" if password
-    sendln "NICK #{nick}"
-    sendln "USER #{nick} 0 * :#{nick}"
+    sendln "PASS #{options[:password]}" if options[:password]
+    sendln "NICK #{options[:nick]}"
+    sendln "USER #{options[:nick]} 0 * :#{options[:nick]}"
+    sendln "JOIN #{options[:channel]}" if options[:join]
   end
 
   def message(channel, message)
@@ -30,19 +34,23 @@ class CarrierPigeon
   end
 
   def self.send(options={})
-    raise ArgumentError unless options[:uri] && options[:message]
+    raise "You must supply a valid IRC URI" unless options[:uri]
+    raise "You must supply a message" unless options[:message]
     uri = Addressable::URI.parse(options[:uri])
-    ssl = options[:ssl] || false
-    pigeon = new(uri.host, uri.port, uri.user, uri.password, ssl)
-    pigeon.message("#" + uri.fragment, options[:message])
+    options[:host] = uri.host
+    options[:port] = uri.port || 6667
+    options[:nick] = uri.user
+    options[:password] = uri.password
+    options[:channel] = "#" + uri.fragment
+    pigeon = new(options)
+    pigeon.message(options[:channel], options[:message])
     pigeon.die
   end
 
   private
 
   def sendln(cmd)
-    @socket.write("#{cmd}\r\n")
-    @socket.flush
+    @socket.puts(cmd)
   end
 
 end
