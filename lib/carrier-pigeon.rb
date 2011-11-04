@@ -30,6 +30,8 @@ class CarrierPigeon
   end
 
   def die
+    sendln "QUIT :quit"
+    @socket.gets until @socket.eof?
     @socket.close
   end
 
