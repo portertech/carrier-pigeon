@@ -16,3 +16,6 @@
 : 
 : # SSL
 : CarrierPigeon.send(:uri => "irc://nick:password@irc.domain.com:6667/#channel", :message => "coo, secret plan", :ssl => true)
+: 
+: # Join the channel (required for most Freenode channels)
+: CarrierPigeon.send(:uri => "irc://nick:password@irc.domain.com:6667/#channel", :message => "cooooo, coo coo", :join => true)
