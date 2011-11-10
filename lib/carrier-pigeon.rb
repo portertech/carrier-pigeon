@@ -22,7 +22,7 @@ class CarrierPigeon
     sendln "PASS #{options[:password]}" if options[:password]
     sendln "NICK #{options[:nick]}"
     sendln "USER #{options[:nick]} 0 * :#{options[:nick]}"
-    sendln "JOIN #{options[:channel]}" if options[:join]
+    sendln "JOIN #{options[:channel]} #{options[:pw]}" if options[:join]
   end
 
   def message(channel, message)
