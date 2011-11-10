@@ -43,7 +43,6 @@ class CarrierPigeon
     options[:port] = uri.port || 6667
     options[:nick] = uri.user
     options[:password] = uri.password
-    options[:channel_password] = options[:channel_password]
     options[:channel] = "#" + uri.fragment
     pigeon = new(options)
     pigeon.message(options[:channel], options[:message])
