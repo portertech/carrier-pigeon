@@ -21,4 +21,9 @@
 : CarrierPigeon.send(:uri => "irc://nick:password@irc.domain.com:6667/#channel", :message => "cooooo, coo coo", :join => true)
 : 
 : # Join a channel that requires a password
-: CarrierPigeon.send(:uri => "irc://nick:password@irc.domain.com:6667/#channel", :channel_password => "password", :message => "cooooo, coo coo", :join => true)
+: CarrierPigeon.send(
+:   :uri => "irc://nick:password@irc.domain.com:6667/#channel",
+:   :channel_password => "password",
+:   :message => "cooooo, coo coo",
+:   :join => true
+: )
