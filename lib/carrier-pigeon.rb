@@ -47,7 +47,7 @@ class CarrierPigeon
     options[:channel] = "#" + uri.fragment
     if options[:nickserv_password]
       options[:nickserv_command] ||=
-        "NICKSERV IDENTIFY #{options[:nickserv_password]}"
+        "PRIVMSG NICKSERV :IDENTIFY #{options[:nickserv_password]}"
     end
     pigeon = new(options)
     pigeon.message(options[:channel], options[:message])
