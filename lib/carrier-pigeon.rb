@@ -22,6 +22,7 @@ class CarrierPigeon
     sendln "PASS #{options[:password]}" if options[:password]
     sendln "NICK #{options[:nick]}"
     sendln "USER #{options[:nick]} 0 * :#{options[:nick]}"
+    sendln options[:nickserv_command] if options[:nickserv_command]
     sendln "JOIN #{options[:channel]} #{options[:channel_password]}" if options[:join]
   end
 
@@ -44,6 +45,10 @@ class CarrierPigeon
     options[:nick] = uri.user
     options[:password] = uri.password
     options[:channel] = "#" + uri.fragment
+    if options[:nickserv_password]
+      options[:nickserv_command] ||=
+        "PRIVMSG NICKSERV :IDENTIFY #{options[:nickserv_password]}"
+    end
     pigeon = new(options)
     pigeon.message(options[:channel], options[:message])
     pigeon.die
