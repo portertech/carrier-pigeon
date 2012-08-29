@@ -23,11 +23,13 @@ class CarrierPigeon
     sendln "NICK #{options[:nick]}"
     sendln "USER #{options[:nick]} 0 * :#{options[:nick]}"
     sendln options[:nickserv_command] if options[:nickserv_command]
-    while line = @socket.gets
-      case line
-        when /^PING :(.+)$/i
-          sendln "PONG :#{$1}"
-          break
+    if options[:register_first]
+      while line = @socket.gets
+        case line
+          when /^PING :(.+)$/i
+            sendln "PONG :#{$1}"
+            break
+        end
       end
     end
     sendln "JOIN #{options[:channel]} #{options[:channel_password]}" if options[:join]
