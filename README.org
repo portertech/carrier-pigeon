@@ -27,3 +27,6 @@
 :   :message => "cooooo, coo coo",
 :   :join => true
 : )
+:
+: # Dealing with servers that require to register first
+: CarrierPigeon.send(:uri => "irc://nick:password@irc.domain.com:6667/#channel", :message => "cooooo, coo coo", :register_first => true)
