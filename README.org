@@ -1,8 +1,3 @@
-* Requirements
-
-- Ruby (MRI)
-- RubyGems
-
 * Install
 
 : gem install carrier-pigeon
@@ -12,21 +7,37 @@
 : require 'carrier-pigeon'
 : 
 : # In the open
-: CarrierPigeon.send(:uri => "irc://nick:password@irc.domain.com:6667/#channel", :message => "cooooo, coo coo")
+: CarrierPigeon.send(
+:   :uri => "irc://nick:password@irc.domain.com:6667/#channel",
+:   :message => "cooooo, coo coo"
+: )
 : 
 : # SSL
-: CarrierPigeon.send(:uri => "irc://nick:password@irc.domain.com:6667/#channel", :message => "coo, secret plan", :ssl => true)
+: CarrierPigeon.send(
+:   :uri => "irc://nick:password@irc.domain.com:6667/#channel",
+:   :message => "coo, secret plan",
+:   :ssl => true
+: )
 : 
 : # Join a channel (required for most Freenode channels)
-: CarrierPigeon.send(:uri => "irc://nick:password@irc.domain.com:6667/#channel", :message => "cooooo, coo coo", :join => true)
+: CarrierPigeon.send(
+:   :uri => "irc://nick:password@irc.domain.com:6667/#channel",
+:   :message => "cooooo, part of the flock",
+:   :join => true
+: )
 : 
 : # Join a channel that requires a password
 : CarrierPigeon.send(
 :   :uri => "irc://nick:password@irc.domain.com:6667/#channel",
-:   :channel_password => "password",
-:   :message => "cooooo, coo coo",
+:   :message => "coo, the password is ..."
+:   :channel_password => "secret",
 :   :join => true
 : )
-:
-: # Dealing with servers that require to register first
-: CarrierPigeon.send(:uri => "irc://nick:password@irc.domain.com:6667/#channel", :message => "cooooo, coo coo", :register_first => true)
+: 
+: # Register (ping reply) prior to joining or messaging a channel (required for some private servers)
+: CarrierPigeon.send(
+:   :uri => "irc://nick:password@irc.domain.com:6667/#channel",
+:   :message => "cooooo, coo coo",
+:   :register_first => true,
+:   :join => true
+: )
