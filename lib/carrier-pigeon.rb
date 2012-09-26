@@ -35,8 +35,9 @@ class CarrierPigeon
     sendln "JOIN #{options[:channel]} #{options[:channel_password]}" if options[:join]
   end
 
-  def message(channel, message)
-    sendln "PRIVMSG #{channel} :#{message}"
+  def message(channel, message, notice = false)
+    command = notice ? "NOTICE" : "PRIVMSG"
+    sendln "#{command} #{channel} :#{message}"
   end
 
   def die
@@ -59,7 +60,7 @@ class CarrierPigeon
         "PRIVMSG NICKSERV :IDENTIFY #{options[:nickserv_password]}"
     end
     pigeon = new(options)
-    pigeon.message(options[:channel], options[:message])
+    pigeon.message(options[:channel], options[:message], options[:notice])
     pigeon.die
   end
 
