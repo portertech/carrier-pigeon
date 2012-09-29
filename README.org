@@ -7,36 +7,58 @@
 * Usage
 
 : require "carrier-pigeon"
-: 
-: # In the open
+
+Send a private message
+
 : CarrierPigeon.send(
 :   :uri => "irc://nick:password@irc.domain.com:6667/#channel",
 :   :message => "cooooo, coo coo"
 : )
-: 
-: # SSL
+
+Send a notice
+
+: CarrierPigeon.send(
+:   :uri => "irc://nick:password@irc.domain.com:6667/#channel",
+:   :message => "cooooo, coo coo",
+:   :notice => true
+: )
+
+Use SSL
+
 : CarrierPigeon.send(
 :   :uri => "irc://nick:password@irc.domain.com:6667/#channel",
 :   :message => "coo, secret plan",
 :   :ssl => true
 : )
-: 
-: # Join a channel (required for most Freenode channels)
+
+Join a channel (required for most Freenode channels)
+
 : CarrierPigeon.send(
 :   :uri => "irc://nick:password@irc.domain.com:6667/#channel",
 :   :message => "cooooo, part of the flock",
 :   :join => true
 : )
-: 
-: # Join a channel that requires a password
+
+Join a channel that requires a password
+
 : CarrierPigeon.send(
 :   :uri => "irc://nick:password@irc.domain.com:6667/#channel",
 :   :message => "coo, the password is ..."
 :   :channel_password => "secret",
 :   :join => true
 : )
-: 
-: # Register (ping reply) prior to joining or messaging a channel (required for some private servers)
+
+Identify with NickServ
+
+: CarrierPigeon.send(
+:   :uri => "irc://nick:password@irc.domain.com:6667/#channel",
+:   :message => "nickserv, coo coo",
+:   :nickserv_password => "secret"
+: )
+
+Register (ping reply) prior to joining or messaging a channel
+(required for some private servers)
+
 : CarrierPigeon.send(
 :   :uri => "irc://nick:password@irc.domain.com:6667/#channel",
 :   :message => "cooooo, coo coo",

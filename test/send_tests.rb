@@ -105,6 +105,15 @@ describe CarrierPigeon do
     @server_received.must_equal(JOIN_PASSWORD)
   end
 
+  it "can identify with nickserv and send a private message to an irc channel" do
+    CarrierPigeon.send(
+      :uri => "irc://foo@localhost:6667/#test",
+      :message => "test",
+      :nickserv_password => "bar"
+    )
+    @server_received.must_equal(NICKSERV_PASSWORD)
+  end
+
   it "can require registration and send a private message to an irc channel" do
     CarrierPigeon.send(
       :uri => "irc://foo@localhost:6667/#test",
@@ -112,15 +121,6 @@ describe CarrierPigeon do
       :register_first => true
     )
     @server_received.must_equal(REGISTER)
-  end
-
-  it "can register with nickserv and send a private message to an irc channel" do
-    CarrierPigeon.send(
-      :uri => "irc://foo@localhost:6667/#test",
-      :message => "test",
-      :nickserv_password => "bar"
-    )
-    @server_received.must_equal(NICKSERV_PASSWORD)
   end
 
   it "must be provided an irc uri" do
