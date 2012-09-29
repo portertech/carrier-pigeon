@@ -2,7 +2,7 @@ require "minitest/spec"
 require "minitest/autorun"
 require "socket"
 
-require File.join(File.dirname(__FILE__), '..', 'lib', 'carrier-pigeon')
+require File.join(File.dirname(__FILE__), "..", "lib", "carrier-pigeon")
 
 PRIVATE_MESSAGE = <<"EXPECTED"
 NICK foo
