@@ -32,7 +32,11 @@ class CarrierPigeon
         end
       end
     end
-    sendln "JOIN #{options[:channel]} #{options[:channel_password]}" if options[:join]
+    if options[:join]
+      join = "JOIN #{options[:channel]}"
+      join += " #{options[:channel_password]}" if options[:channel_password]
+      sendln join
+    end
   end
 
   def message(channel, message, notice = false)
