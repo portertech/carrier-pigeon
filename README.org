@@ -1,3 +1,5 @@
+[[https://secure.travis-ci.org/portertech/carrier-pigeon.png]]
+
 * Install
 
 : gem install carrier-pigeon
