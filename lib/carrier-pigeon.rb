@@ -22,16 +22,18 @@ class CarrierPigeon
     sendln "PASS #{options[:password]}" if options[:password]
     sendln "NICK #{options[:nick]}"
     sendln "USER #{options[:nick]} 0 * :#{options[:nick]}"
-    sendln options[:nickserv_command] if options[:nickserv_command]
-    if options[:register_first]
-      while line = @socket.gets
-        case line
-          when /^PING :(.+)$/i
-            sendln "PONG :#{$1}"
-            break
-        end
+
+    while line = @socket.gets
+      case line
+      when / 00[1-4] #{Regexp.escape(options[:nick])} /
+        break
+      when /^PING :(.+)$/i
+        sendln "PONG :#{$1}"
       end
     end
+
+    sendln options[:nickserv_command] if options[:nickserv_command]
+
     if options[:join]
       join = "JOIN #{options[:channel]}"
       join += " #{options[:channel_password]}" if options[:channel_password]

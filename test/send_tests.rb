@@ -26,18 +26,18 @@ PRIVMSG #test :test
 QUIT :quit
 EXPECTED
 
-JOIN_PASSWORD = <<"EXPECTED"
+PONG = <<"EXPECTED"
 NICK foo
 USER foo 0 * :foo
-JOIN #test bar
+PONG :dummy
 PRIVMSG #test :test
 QUIT :quit
 EXPECTED
 
-REGISTER = <<"EXPECTED"
+JOIN_PASSWORD = <<"EXPECTED"
 NICK foo
 USER foo 0 * :foo
-PONG :hello
+JOIN #test bar
 PRIVMSG #test :test
 QUIT :quit
 EXPECTED
@@ -51,13 +51,12 @@ QUIT :quit
 EXPECTED
 
 describe CarrierPigeon do
-
   before do
     @server_received = ""
     @tcp_server = TCPServer.new(16667)
     Thread.new do
       socket = @tcp_server.accept
-      socket.puts "PING :hello"
+      server_messages.each { |msg| socket.puts msg }
       while line = socket.gets
         @server_received << line
         socket.close if line =~ /:quit/
@@ -70,70 +69,91 @@ describe CarrierPigeon do
     sleep 1
   end
 
-  it "can send a private message to an irc channel" do
-    CarrierPigeon.send(
-      :uri => "irc://foo@localhost:16667/#test",
-      :message => "test"
-    )
-    @server_received.must_equal(PRIVATE_MESSAGE)
+  describe "with server reply" do
+    let :server_messages do
+      [
+        ":dummy 001 foo :Welcome to the Internet Relay Network",
+        ":dummy 002 foo :Your host is dummy",
+        ":dummy 003 foo :This server was created now",
+        ":dummy 004 foo dummy"
+      ]
+    end
+
+    it "can send a private message to an irc channel" do
+      CarrierPigeon.send(
+        :uri => "irc://foo@localhost:16667/#test",
+        :message => "test"
+      )
+      @server_received.must_equal(PRIVATE_MESSAGE)
+    end
+
+    it "can send a notice to an irc channel" do
+      CarrierPigeon.send(
+        :uri => "irc://foo@localhost:16667/#test",
+        :message => "test",
+        :notice => true
+      )
+      @server_received.must_equal(NOTICE)
+    end
+
+    it "can join an irc channel and send a private message" do
+      CarrierPigeon.send(
+        :uri => "irc://foo@localhost:16667/#test",
+        :message => "test",
+        :join => true
+      )
+      @server_received.must_equal(JOIN)
+    end
+
+    it "can join an irc channel with a password and send a private message" do
+      CarrierPigeon.send(
+        :uri => "irc://foo@localhost:16667/#test",
+        :message => "test",
+        :channel_password => "bar",
+        :join => true
+      )
+      @server_received.must_equal(JOIN_PASSWORD)
+    end
+
+    it "can identify with nickserv and send a private message to an irc channel" do
+      CarrierPigeon.send(
+        :uri => "irc://foo@localhost:16667/#test",
+        :message => "test",
+        :nickserv_password => "bar"
+      )
+      @server_received.must_equal(NICKSERV_PASSWORD)
+    end
+
+    it "must be provided an irc uri" do
+      lambda {
+        CarrierPigeon.send(:message => "test")
+      }.must_raise RuntimeError
+    end
+
+    it "must be provided an irc message" do
+      lambda {
+        CarrierPigeon.send(:uri => "irc://foo@localhost:16667/#test")
+      }.must_raise RuntimeError
+    end
   end
 
-  it "can send a notice to an irc channel" do
-    CarrierPigeon.send(
-      :uri => "irc://foo@localhost:16667/#test",
-      :message => "test",
-      :notice => true
-    )
-    @server_received.must_equal(NOTICE)
-  end
+  describe "with server PING before initial reply" do
+    let :server_messages do
+      [
+        "PING :dummy",
+        ":dummy 001 foo :Welcome to the Internet Relay Network",
+        ":dummy 002 foo :Your host is dummy",
+        ":dummy 003 foo :This server was created now",
+        ":dummy 004 foo dummy"
+      ]
+    end
 
-  it "can join an irc channel and send a private message" do
-    CarrierPigeon.send(
-      :uri => "irc://foo@localhost:16667/#test",
-      :message => "test",
-      :join => true
-    )
-    @server_received.must_equal(JOIN)
+    it "must reply with PONG" do
+      CarrierPigeon.send(
+        :uri => "irc://foo@localhost:16667/#test",
+        :message => "test"
+      )
+      @server_received.must_equal(PONG)
+    end
   end
-
-  it "can join an irc channel with a password and send a private message" do
-    CarrierPigeon.send(
-      :uri => "irc://foo@localhost:16667/#test",
-      :message => "test",
-      :channel_password => "bar",
-      :join => true
-    )
-    @server_received.must_equal(JOIN_PASSWORD)
-  end
-
-  it "can identify with nickserv and send a private message to an irc channel" do
-    CarrierPigeon.send(
-      :uri => "irc://foo@localhost:16667/#test",
-      :message => "test",
-      :nickserv_password => "bar"
-    )
-    @server_received.must_equal(NICKSERV_PASSWORD)
-  end
-
-  it "can require registration and send a private message to an irc channel" do
-    CarrierPigeon.send(
-      :uri => "irc://foo@localhost:16667/#test",
-      :message => "test",
-      :register_first => true
-    )
-    @server_received.must_equal(REGISTER)
-  end
-
-  it "must be provided an irc uri" do
-    lambda {
-      CarrierPigeon.send(:message => "test")
-    }.must_raise RuntimeError
-  end
-
-  it "must be provided an irc message" do
-    lambda {
-      CarrierPigeon.send(:uri => "irc://foo@localhost:16667/#test")
-    }.must_raise RuntimeError
-  end
-
 end
